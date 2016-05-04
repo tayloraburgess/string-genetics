@@ -5,4 +5,4 @@ This is a very basic script that mutates a random string over generations until 
 - Prompted by [this](https://www.reddit.com/r/dailyprogrammer/comments/40rs67/20160113_challenge_249_intermediate_hello_world/) challenge found in [r/dailyprogrammer](https://www.reddit.com/r/dailyprogrammer/)
 - Built as a small practice project
 - Currently uses the Hamming Distance to evaluate fitness, but this may change
-- I’m no geneticist, so this may be a horribly crude/completely inaccurate model evolution/selection…but enjoyable to design nonetheless
+- I’m no geneticist, so this may be a horribly crude/completely inaccurate model of evolution/selection…but enjoyable to design nonetheless
