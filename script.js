@@ -51,6 +51,7 @@ function randomCharacter() {
 
 function mutate(parentString, popSize, mutationRate) {
 	var population = [];
+	mutationRate = Math.round(mutationRate);
 
 	for (j = 0; j < popSize; j++) {
 		population[j] = "";
@@ -69,9 +70,10 @@ function child(s, f) {
 
 var startTime = Date.now();
 
-var input = "Burn the witch.";
-var popValue = 100;
-var muteRate = 5;
+var input = "Please hold the line.";
+var popValue = 200;
+var startMuteRate = 10;
+var muteRate = startMuteRate;
 
 var current = "";
 var generation = 0;
@@ -85,12 +87,15 @@ bodyPrintLine("");
 var printTable = bodyTable();
 printTable.style.borderSpacing = "6px";
 
-topRow = tableAddRow(printTable, "Generation", "String", "Fitness");
+topRow = tableAddRow(printTable, "Generation", "String", "Fitness", "Mutation Rate");
 topRow.style.background = "gray";
-tableAddRow(printTable, "Start", current, fitness(input,current));
+tableAddRow(printTable, "Start", current, fitness(input,current), "1 in " + startMuteRate);
+
+startFitness = fitness(input,current);
 
 while (fitness(input, current) > 0) {
     generation++;
+    muteRate = startMuteRate + (startFitness / fitness(input, current));
 	var genStrings = mutate(current, popValue, muteRate);
 	var genChildren = [];
 	var fittest = [];
@@ -115,7 +120,7 @@ while (fitness(input, current) > 0) {
 		current = fittest[randFittest].string;
 	} 
 
-	tableAddRow(printTable, generation, current, fitness(input, current));
+	tableAddRow(printTable, generation, current, fitness(input, current),"1 in " + Math.round(muteRate));
 }
 
 var endTime = Date.now();
