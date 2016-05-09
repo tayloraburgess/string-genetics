@@ -1,42 +1,8 @@
-/* bodyPrintLine:
-Quick "print" function.
-Assigns body & br tag elements to objects, creates a text node from input string,
-then appends text node & br element to body */
-function bodyPrintLine(string) {
-	var body = document.querySelector("body");
-	var line = document.createTextNode(string);
-	var lineBreak = document.createElement("br");
-
-	body.appendChild(line);
-	body.appendChild(lineBreak);
-}
-
-function bodyTable() {
-	var body = document.querySelector("body");
-	tag = document.createElement("table");
-	body.appendChild(tag);
-
-	return tag;
-}
-
-function tableAddRow(table) {
-	var row = table.insertRow();
-
-	for (o = 1; o < arguments.length; o++) {
-		var col = document.createElement("td");
-		var line = document.createTextNode(arguments[o]);
-		col.appendChild(line);
-		row.appendChild(col);
-	}
-
-	return row;
-}
-
 function fitness(targetString, compareString) {
 	var hammingDistance = 0;
 
 	for (l = 0; l < targetString.length; l++) {
-		if (targetString.charAt(l) != compareString.charAt(l)) { hammingDistance++; }
+		if (targetString.charAt(l) != compareString.charAt(l)) hammingDistance++;
 	}
 
 	return hammingDistance;
@@ -70,11 +36,11 @@ function child(s, f) {
 
 var startTime = Date.now();
 
-var input = "Please hold the line.";
+var input = "A Moon Shaped Pool";
 var popValue = 200;
 var startMuteRate = 10;
-var muteRate = startMuteRate;
 
+var muteRate = startMuteRate;
 var current = "";
 var generation = 0;
 
@@ -96,23 +62,23 @@ startFitness = fitness(input,current);
 while (fitness(input, current) > 0) {
     generation++;
     muteRate = startMuteRate + (startFitness / fitness(input, current));
+
 	var genStrings = mutate(current, popValue, muteRate);
+	var minFitness = 0;
 	var genChildren = [];
 	var fittest = [];
+	var fitnessArray = [];
 
 	for (i = 0; i < popValue; i++) {
 		var tempChild = new child(genStrings[i], fitness(input, genStrings[i]));
 		genChildren.push(tempChild);
+		fitnessArray.push(fitness(input, genStrings[i]));
 	}
 
+	minFitness = Math.min(...fitnessArray);
+
 	for (i = 0; i < genChildren.length; i++) {
-		var isGreater = 0;
-		for (j = 0; j < genChildren.length; j++) {
-			if (genChildren[i].fitValue > genChildren[j].fitValue && j != i) {
-				isGreater++;
-			}
-		}
-		if (isGreater == 0) fittest.push(genChildren[i]);
+		if (genChildren[i].fitValue == minFitness) fittest.push(genChildren[i]);
 	}
 
 	if (fittest[0].fitValue <= fitness(input, current)) {
