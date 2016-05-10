@@ -28,8 +28,6 @@ Output strings are based on the input parent string,
 with some characters randomly changed based on the input mutation rate. */
 function mutate(parentString, popSize, mutationRate) {
 	var population = [];
-	// Round input mutation rate to whole integer in case input is a decimal
-	mutationRate = Math.round(mutationRate);
 
 	for (j = 0; j < popSize; j++) {
 		population[j] = "";
@@ -54,18 +52,20 @@ function child(s, f) {
 
 var startTime = Date.now();
 
-// Main variables--change these to experiment with optimizing the program or to mutate toward a different target string
+/* Main variables--change these to experiment with optimizing the program through higher or lower population pools,
+or to evolve toward a different target string */
 var input = "A Moon Shaped Pool";
 var popValue = 200;
-var startMRate = 10;
 
 // Initialize variables that will be used in each iteration of main loop
-var mRate = startMRate;
+var mRate = 2;
 var current = "";
 var generation = 0;
 
 // For the first generation, create random string of the same length as the target
 for (i = 0; i < input.length; i++) current += randomCharacter();
+
+var startFitness = fitness(input, current);
 
 bodyPrintLine("Target String:");
 bodyPrintLine(input);
@@ -75,21 +75,19 @@ bodyPrintLine("");
 var printTable = bodyTable();
 printTable.style.borderSpacing = "6px";
 
-// Add header row to data table
+// Add header row and first gen values to data table
 topRow = tableAddRow(printTable, "Generation", "String", "Fitness", "Mutation Rate");
 topRow.style.background = "gray";
-tableAddRow(printTable, "Start", current, fitness(input,current), "1 in " + startMRate);
+tableAddRow(printTable, "Start", current, startFitness, "1 in " + mRate);
 
-startFitness = fitness(input,current);
-
-// Main program loop--will run until current generation's fitness is 0, meaning mutations have reached target string
+// Main program loop--will run until current generation's fitness is 0, meaning mutations have evolved to target string
 while (fitness(input, current) > 0) {
     generation++;
     /* Scale the mutation rate down as the fitness approaches 0,
     so that there are as few generations as possible */
-    mRate = startMRate + (startFitness / fitness(input, current));
+    mRate = 2 + startFitness - fitness(input, current);
 
-    // Set variables for this loop, including an array of strings for this generation
+    // Set variables for this loop, including an array of mutated strings for this generation
 	var genStrings = mutate(current, popValue, mRate);
 	var minFitness = 0;
 	var genChildren = [];
@@ -126,7 +124,7 @@ while (fitness(input, current) > 0) {
 	} 
 
 	// Add values of chosen child for this generation to the output display table
-	tableAddRow(printTable, generation, current, fitness(input, current),"1 in " + Math.round(mRate));
+	tableAddRow(printTable, generation, current, fitness(input, current),"1 in " + mRate);
 }
 
 var endTime = Date.now();
